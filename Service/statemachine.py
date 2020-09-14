@@ -1,49 +1,33 @@
 from datetime import datetime
-
 from typing import List
+import memcache
 
 from Service.validform import Updater
+
+mc = memcache.Client(['127.0.0.1:11211'], debug=0)
 
 
 class Stages:
     def __init__(self, stages):
         self.stages = stages
-        self.cache = {}
-        self.cache_time = {}
-        self.last_date = datetime.now()
 
     @property
     def k_iter(self):
         return len(self.stages) - 1
 
     def next(self, m: Updater) -> None:
-        if m.message.chat.id not in self.cache:
-            self.reset_all(m.message.chat.id)
-            self.cache_time[m.message.chat.id].append(datetime.now())
+        # заполнение следующих полей
+        # тут мы проверяем на наличие в кэше значения
+        key = mc.get(str(m.message.chat.id))
 
-        self.cache_time[m.message.chat.id].append(datetime.now())
+        if key:
+            key = int(key)
+        else:
+            key = 0
 
-        elapsed = self.cache_time[m.message.chat.id][-1] - self.cache_time[m.message.chat.id][-2]
+        step = self.stages[key].__call__(m)
 
-        if divmod(elapsed.total_seconds(), 60)[1] > 15:
-            self.reset_all(m.message.chat.id)
-            self.cache_time[m.message.chat.id].append(datetime.now())
-
-        step = self.stages[self.cache[m.message.chat.id]].__call__(m)
-        self.cache[m.message.chat.id] = step
-
-    def reset_cache_key(self, key: str or int) -> None:
-        self.cache[key] = 0
-
-    def reset_cache_time(self, key: str or int) -> None:
-        self.cache_time[key] = []
-
-    def reset_all(self, key: str or int) -> None:
-        self.cache[key] = 0
-        self.cache_time[key] = []
-
-    def next_key(self, key: str or int):
-        self.cache[key] = self.cache[key] + 1
+        mc.set(str(m.message.chat.id), str(step), time=15)
 
 
 class LocalCacheForCallbackFunc:
