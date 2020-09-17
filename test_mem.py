@@ -11,18 +11,32 @@ from pymemcache.client import base
 # #
 # # print(result)
 
-# import memcache
-# from time import sleep
-#
-# mc = memcache.Client(['127.0.0.1:11211'], debug=0)
-# mc.set("1", "Some value", time=1)
-#
-# sleep(2)
-# value = mc.get("1")
-#
-# # print(value)
-#
-# if value:
-#     print(value)
-# else:
-#     print('нихуя')
+import memcache
+from time import sleep
+
+mc = memcache.Client(['127.0.0.1:11211'], debug=True)
+mc.set("1", ["Some value", "SomeVal", "Val"])
+mc.set("2", ["Some value", "SomeVal", "Val"])
+
+value = mc.get("1")
+
+values: dict = mc.get_multi(["0", "2"])
+
+one, two = values.get("0"), values.get("2")
+
+print(one)
+print(two)
+
+# print(values)
+
+# print(value)
+
+if value:
+    print(value)
+else:
+    print('нихуя')
+mc.flush_all()
+values: dict = mc.get_multi(["0", "2"])
+one, two = values.get("0"), values.get("2")
+print(one)
+print(two)

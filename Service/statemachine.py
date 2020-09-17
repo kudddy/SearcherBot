@@ -1,10 +1,6 @@
-from datetime import datetime
 from typing import List
-import memcache
-
 from Service.validform import Updater
-
-mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+from db.schema import mc
 
 
 class Stages:
@@ -16,10 +12,12 @@ class Stages:
         return len(self.stages) - 1
 
     def next(self, m: Updater) -> None:
-        # заполнение следующих полей
-        # тут мы проверяем на наличие в кэше значения
+        """
+        Ф-ция занимается маршрутизацией и вызовом коллбэк функций
+        :param m: сообщение от Telegram
+        :return: None
+        """
         key = mc.get(str(m.message.chat.id))
-
         if key:
             key = int(key)
         else:

@@ -1,9 +1,12 @@
 from flask import Flask, request
 from flask_json import FlaskJSON, as_json
 from flask import abort
+
+
 from Service.validform import Updater
 from Service.statemachine import Stages
 from Service.callback import hello_message, analyze_text_and_give_vacancy, goodbye_message
+
 
 state = {0: hello_message, 1: analyze_text_and_give_vacancy, 2: goodbye_message}
 

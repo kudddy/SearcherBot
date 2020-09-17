@@ -1,4 +1,5 @@
 from enum import Enum, unique
+import memcache
 from sqlalchemy import create_engine
 
 from sqlalchemy import (
@@ -25,4 +26,7 @@ vacancy_info_table = Table(
 )
 
 conn = db.connect()
+
+
+mc = memcache.Client(['127.0.0.1:11211'])
 

@@ -21,7 +21,6 @@ def send_message(url: str,
             }})
             payload["reply_markup"].update({'remove_keyboard': remove_keyboard})
     elif isinstance(buttons, list) is True:
-        print('мы тут')
         reply_markup = [[{"text": text}] for text in buttons]
 
         payload = {
@@ -34,14 +33,11 @@ def send_message(url: str,
         if remove_keyboard:
             payload["reply_markup"].update({'remove_keyboard': remove_keyboard})
 
-
     headers = {
         "Content-Type": "application/json",
     }
     payload = json.dumps(payload)
-    data = requests.get(url, data=payload, headers=headers)
-
-    print(data.content)
+    requests.get(url, data=payload, headers=headers)
 
 
 class GetVac:
