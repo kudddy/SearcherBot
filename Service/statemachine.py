@@ -1,6 +1,8 @@
 from typing import List
+
 from Service.validform import Updater
 from db.schema import mc
+from Service.const import timeout_for_chat
 
 
 class Stages:
@@ -17,7 +19,11 @@ class Stages:
         :param m: сообщение от Telegram
         :return: None
         """
-        key = mc.get(str(m.message.chat.id))
+        if m.message:
+            chat_id = str(m.message.chat.id)
+        else:
+            chat_id = str(m.callback_query.message.chat.id)
+        key = mc.get(chat_id)
         if key:
             key = int(key)
         else:
@@ -25,7 +31,7 @@ class Stages:
 
         step = self.stages[key].__call__(m)
 
-        mc.set(str(m.message.chat.id), str(step), time=15)
+        mc.set(chat_id, str(step), time=timeout_for_chat)
 
 
 class LocalCacheForCallbackFunc:
@@ -40,7 +46,6 @@ class LocalCacheForCallbackFunc:
     def give_cache(self, chat_id: int) -> int or False:
         if chat_id in self.cache_iter and chat_id in self.cache_vacancy_result:
             try:
-                print(chat_id)
                 return self.cache_vacancy_result[chat_id][self.cache_iter[chat_id]]
             except IndexError as e:
                 return False

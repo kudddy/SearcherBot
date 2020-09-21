@@ -1,4 +1,6 @@
 import memcache
+
+from Service.const import server_memcached
 # from enum import Enum, unique
 # from sqlalchemy import create_engine
 #
@@ -28,5 +30,5 @@ import memcache
 # conn = db.connect()
 
 
-mc = memcache.Client(['127.0.0.1:11211'])
+mc = memcache.Client([server_memcached])
 

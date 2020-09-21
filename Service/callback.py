@@ -1,20 +1,20 @@
 from Service.const import url_send_message
 from Service.helper import send_message
 from Service.validform import Updater
-from SearchEngine.EasySearchEngine import InversIndexSearch
 from Service.statemachine import LocalCacheForCallbackFunc
+from Service.const import vacancy_url
+from Service.const import url_fasttext, token_fastext, time_for_update_index
+
+from SearchEngine.EasySearchEngine import InversIndexSearch
 from ext.helper import GetVac, remove_html_in_dict, pcl
 from Cache.cache import vacs_filename, index_filename
-from Service.const import vacancy_url
-
-# from db.query import VACANCY_QUERY
-# from db.schema import vacancy_info_table
 from db.schema import mc
+
 
 # инициализируем класс с вакансиями
 vacs = GetVac(vacs_filename=vacs_filename)
 # инициализируем поисковой движок
-search = InversIndexSearch(url="104.154.103.236:8080/FastTextAsServer", token="dkhfklsdhflksdhflksdhf43934")
+search = InversIndexSearch(url=url_fasttext, token=token_fastext)
 
 # инициализируем класс с кэшем только для коллбэк ф-ций
 cache = LocalCacheForCallbackFunc()
@@ -26,7 +26,10 @@ def hello_message(m: Updater):
     :param m: Входящее сообщение
     :return: ключ колбэк ф-ции, которую нужно вызвать
     """
-    cache.clean(m.message.chat.id)
+    if m.message:
+        cache.clean(m.message.chat.id)
+    else:
+        cache.clean(m.callback_query.message.chat.id)
     text = "Приветствую, я найду для тебя работу. Введите ключевые слова!"
     send_message(url_send_message, m.message.chat.id, text)
     return 1
@@ -39,8 +42,8 @@ def analyze_text_and_give_vacancy(m: Updater):
     :return: ключ колбэк ф-ции, которую нужно вызвать
     """
     # процедура для обновления кэша
+    #
     key = mc.get("key_for_update")
-    print(m.message.chat.id)
     if key:
         # TODO сделать посимпотичнее
         pass
@@ -49,7 +52,8 @@ def analyze_text_and_give_vacancy(m: Updater):
         vacs.vacs = pcl.get_pickle_file(vacs_filename)
         # установка ключа для обновления
         # есть ненулевая вероятность того что обновится только одна копия приложения
-        mc.set("key_for_update", "True", time=60 * 60 * 12)
+        # возможно все стоит хранить в memcached
+        mc.set("key_for_update", "True", time=time_for_update_index)
 
     if m.message.text != 'Нет':
         if cache.check(m.message.chat.id):
