@@ -30,16 +30,15 @@ class InversIndexSearch(ClientFasttext):
         global_cache = {}
         global_arr = []
         self.__logger.info('cleaning text')
-        for k, dirty_string in tqdm(vacancy_dict.items()):
+        for k, dirty_string in vacancy_dict.items():
             clean_token = tokenizer.clean_query(get_clean_text_str(dirty_string['content']))
             global_cache.update({k: clean_token})
             global_arr.extend(clean_token)
         self.__logger.info('done')
 
         self.__logger.info('indexing')
-        for token in tqdm(set(global_arr)):
+        for token in set(global_arr):
             # cоздание словаря с мэппингом слова к словам, которые близки по контексту
-
             result = [x[0] for x in self.get_most_similar(token, topn=self.topn)] + [token]
             size = self.topn + 1
             iter_dict = dict(zip(result, [token] * size))

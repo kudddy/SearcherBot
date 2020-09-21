@@ -5,7 +5,6 @@ requests
 geographiclib
 sklearn
 tqdm
-xgboost
 pandas
 pymorphy2
 psycopg2-binary
@@ -20,3 +19,5 @@ stop_words
 ml_metrics
 numpy
 pymystem3
+pydantic
+python-memcached

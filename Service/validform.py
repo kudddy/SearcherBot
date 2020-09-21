@@ -28,14 +28,14 @@ class From(BaseModel):
     id: int
     is_bot: bool
     first_name: str
-    username: str
+    username: str or None = None
     language_code: str
 
 
 class Chat(BaseModel):
     id: int
     first_name: str
-    username: str
+    username: str or None = None
     type: str
 
 

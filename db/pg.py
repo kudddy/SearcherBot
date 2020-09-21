@@ -1,8 +1,8 @@
-from sqlalchemy import create_engine
-from sqlalchemy import Table, Column, String, MetaData, Integer, select
-from ext.pickler import Pickler as pcl
-from db.schema import vacancy_info_table, db
-from tqdm import tqdm
+# from sqlalchemy import create_engine
+# from sqlalchemy import Table, Column, String, MetaData, Integer, select
+# from ext.pickler import Pickler as pcl
+# from db.schema import vacancy_info_table, db
+# from tqdm import tqdm
 
 
 # # создаем таблицу с свежими вакансиями

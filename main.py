@@ -3,7 +3,6 @@ from Service.engine import FlaskApp
 
 
 # TODO логирование, фильтраци по города, готов не готов к переезду, автоматический апдейтер индексов и вакансий
-print('лол')
 try:
     app = FlaskApp().run()
 except Exception as e:

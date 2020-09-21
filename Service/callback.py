@@ -5,10 +5,11 @@ from SearchEngine.EasySearchEngine import InversIndexSearch
 from Service.statemachine import LocalCacheForCallbackFunc
 from ext.helper import GetVac, remove_html_in_dict, pcl
 from Cache.cache import vacs_filename, index_filename
+from Service.const import vacancy_url
 
-from db.query import VACANCY_QUERY
-from db.schema import vacancy_info_table
-from db.schema import conn, mc
+# from db.query import VACANCY_QUERY
+# from db.schema import vacancy_info_table
+from db.schema import mc
 
 # инициализируем класс с вакансиями
 vacs = GetVac(vacs_filename=vacs_filename)
@@ -39,21 +40,22 @@ def analyze_text_and_give_vacancy(m: Updater):
     """
     # процедура для обновления кэша
     key = mc.get("key_for_update")
+    print(m.message.chat.id)
     if key:
-        print('не зашли')
         # TODO сделать посимпотичнее
         pass
     else:
-        print('Зашли чтобы обновиться')
         search.cache_index = pcl.get_pickle_file(index_filename)
         vacs.vacs = pcl.get_pickle_file(vacs_filename)
-        mc.set("key_for_update", "True", time=60*60*1)
+        # установка ключа для обновления
+        # есть ненулевая вероятность того что обновится только одна копия приложения
+        mc.set("key_for_update", "True", time=60 * 60 * 12)
 
     if m.message.text != 'Нет':
         if cache.check(m.message.chat.id):
             cache.next_step(m.message.chat.id)
         else:
-            result: list = search.search(m.message.text)[0:10]
+            result: list = search.search(m.message.text)
             step = 0
             cache.caching(m.message.chat.id, step=step, arr=result)
         # TODO записать в базу vacancy_id в int а не в str
@@ -67,11 +69,12 @@ def analyze_text_and_give_vacancy(m: Updater):
         # vacancy_info = True
         # except Exception as e:
         # vacancy_info = False
-        vacancy_info = vacs.get_vac_by_id(cache.give_cache(m.message.chat.id))
+
+        vacancy_info: dict = vacs.get_vac_by_id(cache.give_cache(m.message.chat.id))
         if vacancy_info:
             # для работы с базой данных
             title: str = vacancy_info['content']['title'] + '\n'
-            text: str = title + vacancy_info['content']['header']
+            text: str = title + vacancy_info['content']['header'] + '\n' + vacancy_url.format(str(cache.give_cache(m.message.chat.id)))
             # title: str = raw_title + '\n'
             # text: str = title + raw_vac_text
             send_message(url_send_message, m.message.chat.id, remove_html_in_dict(text)[:4095], buttons=['Да', 'Нет'])

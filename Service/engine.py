@@ -1,12 +1,14 @@
 from flask import Flask, request
 from flask_json import FlaskJSON, as_json
 from flask import abort
-
+from termcolor import colored
 
 from Service.validform import Updater
 from Service.statemachine import Stages
 from Service.callback import hello_message, analyze_text_and_give_vacancy, goodbye_message
+from ext.helper import set_logger
 
+logger = set_logger(colored('engine', 'green'), verbose=True)
 
 state = {0: hello_message, 1: analyze_text_and_give_vacancy, 2: goodbye_message}
 
@@ -28,13 +30,12 @@ class FlaskApp:
             try:
                 data = request.form if request.form else request.json
                 if request.method == "POST":
+                    logger.info("Message: %s", dict(data))
                     message = Updater(**dict(data))
-                    print('му тут')
                     stage.next(message)
-                    print('а теперь тут')
                     return "ok"
             except Exception as e:
-                print(e)
+                logger.info("Engine error:", str(e))
                 abort(404)
 
         @app.route("/health_status", methods=['GET'])

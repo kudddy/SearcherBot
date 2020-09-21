@@ -40,6 +40,7 @@ class LocalCacheForCallbackFunc:
     def give_cache(self, chat_id: int) -> int or False:
         if chat_id in self.cache_iter and chat_id in self.cache_vacancy_result:
             try:
+                print(chat_id)
                 return self.cache_vacancy_result[chat_id][self.cache_iter[chat_id]]
             except IndexError as e:
                 return False
