@@ -25,43 +25,65 @@ class Stages:
             chat_id = str(m.callback_query.message.chat.id)
         key = mc.get(chat_id)
         if key:
-            key = int(key)
+            step = int(key['step'])
         else:
-            key = 0
+            step = 0
 
-        step = self.stages[key].__call__(m)
+        step = self.stages[step].__call__(m)
 
-        mc.set(chat_id, str(step), time=timeout_for_chat)
+        key = mc.get(chat_id)
+
+        if key:
+            key['step'] = step
+        else:
+            key = {'step': step}
+
+        mc.set(chat_id, key, time=timeout_for_chat)
 
 
 class LocalCacheForCallbackFunc:
-    def __init__(self):
-        self.cache_vacancy_result = {}
-        self.cache_iter = {}
 
-    def caching(self, chat_id: int, step: int, arr: List[int]) -> None:
-        self.cache_iter[chat_id] = step
-        self.cache_vacancy_result[chat_id] = arr
+    @staticmethod
+    def caching(chat_id: int, step: int, arr: List[int]) -> None:
 
-    def give_cache(self, chat_id: int) -> int or False:
-        if chat_id in self.cache_iter and chat_id in self.cache_vacancy_result:
+        chat_id = str(chat_id)
+        val = mc.get(chat_id)
+
+        val['cache_vacancy_result'] = arr
+        val['cache_iter'] = step
+
+        mc.set(chat_id, val)
+
+    @staticmethod
+    def give_cache(chat_id: int) -> int or False:
+        chat_id = str(chat_id)
+
+        val = mc.get(chat_id)
+
+        if val:
             try:
-                return self.cache_vacancy_result[chat_id][self.cache_iter[chat_id]]
+                return val['cache_vacancy_result'][val['cache_iter']]
             except IndexError as e:
                 return False
         else:
             return False
 
-    def check(self, chat_id: int) -> bool:
-        if chat_id in self.cache_iter:
+    @staticmethod
+    def check(chat_id: int) -> bool:
+        val = mc.get(str(chat_id))
+        if 'cache_iter' in val:
             return True
         else:
             return False
 
-    def clean(self, chat_id: int) -> None:
-        if chat_id in self.cache_iter and chat_id in self.cache_vacancy_result:
-            self.cache_iter.pop(chat_id, None)
-            self.cache_vacancy_result.pop(chat_id, None)
+    @staticmethod
+    def clean(chat_id: int) -> None:
+        val = mc.get(str(chat_id))
+        if val:
+            mc.delete(str(chat_id))
 
-    def next_step(self, chat_id: int) -> None:
-        self.cache_iter[chat_id] += 1
+    @staticmethod
+    def next_step(chat_id: int) -> None:
+        val = mc.get(str(chat_id))
+        val['cache_iter'] += 1
+        mc.set(str(chat_id), val)

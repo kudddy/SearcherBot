@@ -13,6 +13,10 @@ from Service.callback import hello_message, analyze_text_and_give_vacancy, goodb
 
 from Service.const import timeout_for_chat
 
+state = {0: hello_message, 1: analyze_text_and_give_vacancy, 2: goodbye_message}
+
+stage = Stages(state)
+
 
 class TestExternalSystem(unittest.TestCase):
 
@@ -100,11 +104,7 @@ class TestInternalSystem(unittest.TestCase):
 
         self.assertEqual(list, type(result))
 
-    def test_message_valid_form(self):
-        state = {0: hello_message, 1: analyze_text_and_give_vacancy, 2: goodbye_message}
-
-        stage = Stages(state)
-
+    def test_message_valid_form_user_one(self):
         data = {
             "update_id": 243475549,
             "message": {
@@ -130,6 +130,64 @@ class TestInternalSystem(unittest.TestCase):
         message = Updater(**data)
 
         stage.next(message)
+
+        stage.next(message)
+
+        stage.next(message)
+
+        sleep(timeout_for_chat + 2)
+
+        stage.next(message)
+
+    def test_message_valid_form_user_two(self):
+        data = {
+            "update_id": 632560263,
+            "message": {
+                "message_id": 505,
+                "from": {
+                    "id": 710828013,
+                    "is_bot": False,
+                    "first_name": "Серега",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 710828013,
+                    "first_name": "Серега",
+                    "type": "private"
+                },
+                "date": 1600629554,
+                "text": "java"
+            }
+        }
+
+        message = Updater(**data)
+
+        stage.next(message)
+
+        stage.next(message)
+
+        stage.next(message)
+        data = {
+            "update_id": 632560263,
+            "message": {
+                "message_id": 505,
+                "from": {
+                    "id": 710828013,
+                    "is_bot": False,
+                    "first_name": "Серега",
+                    "language_code": "ru"
+                },
+                "chat": {
+                    "id": 710828013,
+                    "first_name": "Серега",
+                    "type": "private"
+                },
+                "date": 1600629554,
+                "text": "Нет"
+            }
+        }
+
+        message = Updater(**data)
 
         stage.next(message)
 

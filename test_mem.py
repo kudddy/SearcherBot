@@ -48,3 +48,18 @@ from pymemcache.client import base
 # print(one)
 # print(two)
 
+import memcache
+from time import sleep
+
+mc = memcache.Client(["127.0.0.1:11211"], debug=True)
+mc.set("1", ["Some value", "SomeVal", "Val"])
+mc.set("2", ["Some value", "SomeVal", "Val"])
+mc.set("3", {"лол": "лол"})
+
+
+
+mc.flush_all()
+
+lol = {'cache': 0}
+if 'cache' in lol:
+    print('лулу')
