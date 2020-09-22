@@ -14,4 +14,4 @@ time_for_update_index = 60*60*1
 
 time_for_sleep_sheduller = 60*60*12
 
-timeout_for_chat = 30
+timeout_for_chat = 15
