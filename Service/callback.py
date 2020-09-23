@@ -60,7 +60,7 @@ def analyze_text_and_give_vacancy(m: Updater):
         vacancy_info: dict = vacs.get_vac_by_id(vac_id)
         if vacancy_info:
             title: str = "💥 Название позиции: " + vacancy_info['content']['title'] + '\n'
-            text: str = title + vacancy_info['content']['header'] + '\n' + vacancy_url.format(str(vac_id))
+            text: str = title + "💥 Описание: " + vacancy_info['content']['header'] + '\n' + vacancy_url.format(str(vac_id))
             text: str = text + '\n' "Показать еще❓"
             send_message(url_send_message, m.message.chat.id,
                          remove_html_in_dict(text)[:4095],
