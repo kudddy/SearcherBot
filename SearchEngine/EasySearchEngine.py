@@ -1,6 +1,5 @@
 from termcolor import colored
 from collections import Counter
-from tqdm import tqdm
 
 from SearchEngine.Tokenizer import QueryBuilder
 from ext.pickler import Pickler as pcl

@@ -39,7 +39,7 @@ def hello_message(m: Updater):
         mc.set("key_for_update_{}".format(str(unique_quid_app)), "True", time=time_for_update_index)
 
     text = "💥 Приветствую, я найду для тебя работу. Введите ключевые слова❗"
-    send_message(url_send_message, m.message.chat.id, text)
+    send_message(url_send_message, m.message.chat.id, text, remove_keyboard=True)
     return 1
 
 
@@ -62,7 +62,10 @@ def analyze_text_and_give_vacancy(m: Updater):
             title: str = "💥 Название позиции: " + vacancy_info['content']['title'] + '\n'
             text: str = title + vacancy_info['content']['header'] + '\n' + vacancy_url.format(str(vac_id))
             text: str = text + '\n' "Показать еще❓"
-            send_message(url_send_message, m.message.chat.id, remove_html_in_dict(text)[:4095], buttons=['Да', 'Нет'])
+            send_message(url_send_message, m.message.chat.id,
+                         remove_html_in_dict(text)[:4095],
+                         buttons=['Да', 'Нет'],
+                         one_time_keyboard=False)
             return 1
         else:
             text = '🤓 К сожалению, вакансий больше нет❗️'
@@ -71,11 +74,11 @@ def analyze_text_and_give_vacancy(m: Updater):
 
     else:
         text = '💥 Пока, возвращайся еще❗️'
-        send_message(url_send_message, m.message.chat.id, text)
+        send_message(url_send_message, m.message.chat.id, text, remove_keyboard=True)
         return 0
 
 
 def goodbye_message(m: Updater):
     text = '💥 Пока, возвращайся еще❗️'
-    send_message(url_send_message, m.message.chat.id, text)
+    send_message(url_send_message, m.message.chat.id, text, remove_keyboard=True)
     return 0
