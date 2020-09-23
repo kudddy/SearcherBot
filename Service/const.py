@@ -8,10 +8,6 @@ url_fasttext = data['url_fasttext']
 token_fastext = data['token_fastext']
 server_memcached = data['server_memcached']
 bot_token = data['bot_token']
-print(url_fasttext)
-print(token_fastext)
-print(server_memcached)
-print(bot_token)
 
 url_send_message = """https://api.telegram.org/bot{}/sendMessage""".format(bot_token)
 index_filename = 'Cache/files/index_cache.p'
