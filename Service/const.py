@@ -1,3 +1,4 @@
+from random import randint
 url_send_message = """https://api.telegram.org/bot1238618041:AAGiAHI9FyQHMM4IpYqS_YRTMTxCpDnODJM/sendMessage"""
 index_filename = 'Cache/files/index_cache.p'
 vacs_filename = 'Cache/files/struct_actual_vac.pickle'
@@ -17,3 +18,5 @@ time_for_sleep_sheduller = 60*60*12
 timeout_for_chat = 300
 
 timeout_for_chat_test = 5
+
+unique_quid_app = randint(0, 10000)

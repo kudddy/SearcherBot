@@ -57,9 +57,7 @@ class LocalCacheForCallbackFunc:
     @staticmethod
     def give_cache(chat_id: int) -> int or False:
         chat_id = str(chat_id)
-
         val = mc.get(chat_id)
-
         if val:
             try:
                 return val['cache_vacancy_result'][val['cache_iter']]
@@ -78,12 +76,14 @@ class LocalCacheForCallbackFunc:
 
     @staticmethod
     def clean(chat_id: int) -> None:
-        val = mc.get(str(chat_id))
+        chat_id = str(chat_id)
+        val = mc.get(chat_id)
         if val:
-            mc.delete(str(chat_id))
+            mc.delete(chat_id)
 
     @staticmethod
     def next_step(chat_id: int) -> None:
-        val = mc.get(str(chat_id))
+        chat_id = str(chat_id)
+        val = mc.get(chat_id)
         val['cache_iter'] += 1
-        mc.set(str(chat_id), val)
+        mc.set(chat_id, val)

@@ -56,10 +56,11 @@ mc.set("1", ["Some value", "SomeVal", "Val"])
 mc.set("2", ["Some value", "SomeVal", "Val"])
 mc.set("3", {"лол": "лол"})
 
-
-
 mc.flush_all()
 
-lol = {'cache': 0}
-if 'cache' in lol:
-    print('лулу')
+g = mc.get("1")
+
+if g is None:
+    print('конь')
+
+
