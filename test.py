@@ -11,7 +11,7 @@ from Service.validform import Updater
 from Service.statemachine import Stages
 from Service.callback import hello_message, analyze_text_and_give_vacancy, goodbye_message
 
-from Service.const import timeout_for_chat
+from Service.const import timeout_for_chat_test
 
 state = {0: hello_message, 1: analyze_text_and_give_vacancy, 2: goodbye_message}
 
@@ -135,7 +135,7 @@ class TestInternalSystem(unittest.TestCase):
 
         stage.next(message)
 
-        sleep(timeout_for_chat + 2)
+        sleep(timeout_for_chat_test + 2)
 
         stage.next(message)
 
@@ -191,7 +191,7 @@ class TestInternalSystem(unittest.TestCase):
 
         stage.next(message)
 
-        sleep(timeout_for_chat + 2)
+        sleep(timeout_for_chat_test + 2)
 
         stage.next(message)
 
