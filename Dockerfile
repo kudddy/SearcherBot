@@ -43,7 +43,6 @@ EXPOSE 11211
 
 RUN mkdir -p /usr/src/app/
 
-
 WORKDIR /usr/src/app/
 
 COPY . /usr/src/app/
@@ -57,6 +56,7 @@ RUN chmod 666 Cache/files/stopwords.txt
 RUN chmod 666 Cache/files/struct_actual_vac.pickle
 RUN chmod 666 Cache/files/token.pickle
 RUN chmod 666 vac_bot_logs.log
+
 
 RUN python3 -m pip install -r requirements.txt
 # RUN python3 -m pip install -i http://mirror.whatever/pypi/simple --trusted-host mirror.whatever --user -r requirements.txt
