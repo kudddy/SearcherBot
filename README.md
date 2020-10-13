@@ -30,6 +30,13 @@ docker push gcr.io/${PROJECT_ID}/${APP_NAME}
 ```
 gcloud app deploy --image-url gcr.io/${PROJECT_ID}/${APP_NAME}
 ```
+В случае успешного завершения деплоя, gcloud вернет ссылку на проект. Далее, нужно дать понять сервису
+телеграмм куда слать запросы. GET запрос:
+```
+https://api.telegram.org/bot1238618041:AAGiAHI9FyQHMM4IpYqS_YRTMTxCpDnODJM/setWebhook?url=https://velvety-harbor-284611.ew.r.appspot.com/
+```
+Должен вернуть ок.
+
 
 ## Особенности
 
@@ -55,5 +62,6 @@ gcloud app deploy --image-url gcr.io/${PROJECT_ID}/${APP_NAME}
 3. Переделать ux схему управлениями вакансиями и вообще переделать ее черех callback
 4. Возможно стоит перенести w2v в основной сервис
 5. Перенести файлы установки в отдельную папку... а потом может и удалять их
+6. Подключить jaeger для описания api
 
 
