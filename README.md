@@ -33,7 +33,7 @@ gcloud app deploy --image-url gcr.io/${PROJECT_ID}/${APP_NAME}
 В случае успешного завершения деплоя, gcloud вернет ссылку на проект. Далее, нужно дать понять сервису
 телеграмм куда слать запросы. GET запрос:
 ```
-https://api.telegram.org/bot1238618041:AAGiAHI9FyQHMM4IpYqS_YRTMTxCpDnODJM/setWebhook?url=https://velvety-harbor-284611.ew.r.appspot.com/
+https://api.telegram.org/<BOT_TOKEN>/setWebhook?url=https://velvety-harbor-284611.ew.r.appspot.com/
 ```
 Должен вернуть ок.
 
