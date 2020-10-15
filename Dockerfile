@@ -5,7 +5,7 @@ ENV HOME="/" \
     OS_FLAVOUR="debian-10" \
     OS_NAME="linux"
 
-COPY prebuildfs /
+COPY meminstlpack/prebuildfs /
 # Install required system packages and dependencies
 RUN install_packages acl ca-certificates curl gzip libc6 libevent-2.1-6 libsasl2-2 libsasl2-modules procps sasl2-bin tar
 RUN . /opt/bitnami/scripts/libcomponent.sh && component_unpack "memcached" "1.6.7-0" --checksum 736b53ed71e0af83e178c54e7427fba85b36feca5ec6d70ec8ade3cf63acab81
@@ -17,7 +17,7 @@ RUN ln -s /opt/bitnami/scripts/memcached/entrypoint.sh /entrypoint.sh
 RUN ln -s /opt/bitnami/scripts/memcached/run.sh /run.sh
 
 
-COPY rootfs /
+COPY meminstlpack/rootfs /
 RUN /opt/bitnami/scripts/memcached/postunpack.sh
 
 RUN install_packages build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libcrypto++-dev libssl-dev libreadline-dev libffi-dev curl libbz2-dev libsqlite3-dev libffi-dev
