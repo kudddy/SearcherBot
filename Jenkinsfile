@@ -7,7 +7,7 @@ pipeline {
         GOOGLE_APP_NAME = 'telebot'
     }
     stages {
-        stage('Build image') {
+        stage('Logging in Docker and gcloud') {
             steps {
                 echo 'Starting to build docker image'
 
@@ -22,6 +22,15 @@ pipeline {
                     /gcloud/google-cloud-sdk/bin/gcloud auth configure-docker
                     cat ${GOOGLE_SERVICE_ACCOUNT_KEY} | docker login https://gcr.io -u _json_key --password-stdin
                     """
+                }
+            }
+        }
+        stage('Build image') {
+            steps {
+                echo 'Starting to build docker image'
+
+                script {
+                    echo 'log in gcloud'
                     def customImage = docker.build("gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_APP_NAME}")
 
                     customImage.push()
@@ -29,7 +38,17 @@ pipeline {
                     sh """
                     /gcloud/google-cloud-sdk/bin/gcloud app deploy --image-url gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_APP_NAME}
                     """
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Start deploy'
 
+                script {
+                    sh """
+                    /gcloud/google-cloud-sdk/bin/gcloud app deploy --image-url gcr.io/${GOOGLE_PROJECT_ID}/${GOOGLE_APP_NAME}
+                    """
                 }
             }
         }
