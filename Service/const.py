@@ -1,13 +1,23 @@
 from random import randint
 from json import load
+from os import environ
 
-with open('Cache/files/cnfg.json') as json_file:
-    data: dict = load(json_file)
 
-url_fasttext: str = data['url_fasttext']
-token_fastext: str = data['token_fastext']
-server_memcached: str = data['server_memcached']
-bot_token: str = data['bot_token']
+jenkins: bool = True
+
+if jenkins:
+    url_fasttext = environ['url_fasttext']
+    token_fastext = environ['token_fastext']
+    server_memcached = environ['server_memcached']
+    bot_token = environ['bot_token']
+else:
+    with open('Cache/files/cnfg.json') as json_file:
+        data: dict = load(json_file)
+
+    url_fasttext: str = data['url_fasttext']
+    token_fastext: str = data['token_fastext']
+    server_memcached: str = data['server_memcached']
+    bot_token: str = data['bot_token']
 
 url_send_message: str = """https://api.telegram.org/bot{}/sendMessage""".format(bot_token)
 index_filename: str = 'Cache/files/index_cache.p'
