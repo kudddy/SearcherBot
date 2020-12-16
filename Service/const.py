@@ -3,7 +3,7 @@ from json import load
 from os import environ
 
 
-jenkins: bool = True
+jenkins: bool = False
 
 if jenkins:
     url_fasttext = environ['url_fasttext']
